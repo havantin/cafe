@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load currency_filters %} {% block content %}
+<div class="container py-5">
+    <h1 class="text-center fw-bold mb-5 italic" style="font-family: serif; color: white;">Giỏ hàng.</h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {% if cart_items %}
+                <div class="card border-0 shadow-sm rounded-4 p-4">
+                    {% for item in cart_items %}
+                    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                        <img src="{{ item.product.image.url }}" class="rounded-3" style="width: 80px; height: 80px; object-fit: cover;">
+                        <div class="ms-3 flex-grow-1">
+                            <h5 class="mb-0 fw-bold">{{ item.product.name }}</h5>
+                            <p class="text-muted small mb-0">{{ item.product.category.name }}</p>
+                        </div>
+                        
+                        <div class="text-end">
+                            <span class="d-block fw-bold mb-2">{{ item.subtotal|vn_currency }} VNĐ</span>
+                            
+                            <div class="d-flex align-items-center justify-content-end bg-light rounded-pill p-1" style="border: 1px solid #dee2e6;">
+                                <a href="{% url 'update_cart' item.product.id 'minus' %}" 
+                                   class="btn btn-sm rounded-circle px-2 py-0 border-0">
+                                    <i class="bi bi-dash"></i>
+                                </a>
+                                
+                                <span class="mx-2 fw-bold" style="min-width: 20px; text-align: center;">{{ item.quantity }}</span>
+                                
+                                <a href="{% url 'update_cart' item.product.id 'plus' %}" 
+                                   class="btn btn-sm rounded-circle px-2 py-0 border-0">
+                                    <i class="bi bi-plus"></i>
+                                </a>
+
+                                <a href="{% url 'update_cart' item.product.id 'remove' %}" 
+                                   class="ms-2 ps-2 border-start text-danger" title="Xóa món này">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="text-center mt-4">
+                        <h4 class="fw-bold">Tổng cộng: {{ total_price|vn_currency }} VNĐ</h4>
+                        <button type="button" class="btn btn-dark btn-lg rounded-pill px-5 mt-3 shadow-sm" data-bs-toggle="modal" data-bs-target="#qrModal">
+                            Thanh toán ngay
+                        </button>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 shadow-lg" style="border-radius: 25px;">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title fw-bold w-100 text-center" id="qrModalLabel">Quét Mã Thanh Toán</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center pb-5">
+                                <p class="text-muted mb-4 small">Vui lòng quét mã QR bên dưới để thực hiện chuyển khoản cho đơn hàng của bạn.</p>
+                                
+                                <div class="qr-box p-3 d-inline-block bg-white shadow-sm rounded-4 mb-4">
+                                    <img src="https://img.vietqr.io/image/mbbank-7675222222-compact.jpg?amount={{ total_price }}&addInfo=ThanhToanCoffee" 
+                                         alt="Mã QR Thanh Toán" 
+                                         class="img-fluid" 
+                                         style="max-width: 280px; height: auto;">
+                                </div>
+
+                                <div class="payment-details text-start mx-auto p-3 bg-light rounded-3" style="max-width: 320px;">
+                                    <p class="mb-1 small"><strong>Số tiền:</strong> <span class="text-danger">{{ total_price|vn_currency }} VNĐ</span></p>
+                                    <p class="mb-1 small"><strong>Nội dung:</strong> CoffeeHouse {{ request.user.username }}</p>
+                                    <p class="mb-0 small"><strong>Chủ TK:</strong> NGUYEN VAN A</p>
+                                </div>
+
+                                <a href="{% url 'confirm_order' %}" class="btn btn-warning w-100 mt-4 rounded-pill fw-bold py-2">
+                                    XÁC NHẬN ĐÃ CHUYỂN KHOẢN
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+                    <p class="text-muted mb-4 fs-5">Giỏ hàng của bạn đang trống.</p>
+                    <a href="/" class="btn btn-dark btn-lg rounded-pill px-4">Khám phá thực đơn</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal-backdrop.show { opacity: 0.8; backdrop-filter: blur(5px); }
+</style>
+{% endblock %}

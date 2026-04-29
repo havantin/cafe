@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-orange: #ff7b00;
+        --dark-bg: #0a0a0a;
+        --card-bg: #1a1a1a;
+        --text-muted: #a0a0a0;
+    }
+
+    body {
+        background-color: var(--dark-bg);
+        color: white;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .profile-container {
+        padding: 120px 0 60px;
+        min-height: 100vh;
+    }
+
+    /* Sidebar Menu */
+    .profile-sidebar {
+        background: var(--card-bg);
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid #333;
+    }
+
+    .nav-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-item-link {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        color: white;
+        text-decoration: none;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        transition: 0.3s;
+    }
+
+    .nav-item-link i { margin-right: 12px; width: 20px; text-align: center; }
+
+    .nav-item-link:hover, .nav-item-link.active {
+        background: var(--primary-orange);
+        color: white;
+    }
+
+    /* Main Content Card */
+    .content-card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        border: 1px solid #333;
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(45deg, #1a1a1a, #2c1a0a);
+        padding: 30px;
+        border-bottom: 1px solid #333;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .avatar-circle-lg {
+        width: 80px;
+        height: 80px;
+        background: var(--primary-orange);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        border: 3px solid rgba(255,255,255,0.1);
+    }
+
+    .form-section { padding: 30px; }
+
+    .custom-label {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .custom-input {
+        background: #0f0f0f;
+        border: 1px solid #333;
+        color: white;
+        padding: 12px 15px;
+        border-radius: 10px;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .custom-input:focus {
+        border-color: var(--primary-orange);
+        outline: none;
+    }
+
+    .btn-update {
+        background: var(--primary-orange);
+        color: white;
+        border: none;
+        padding: 12px 35px;
+        border-radius: 30px;
+        font-weight: 600;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .btn-update:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 123, 0, 0.4);
+    }
+
+    .info-box {
+        background: rgba(255, 123, 0, 0.05);
+        border-left: 4px solid var(--primary-orange);
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 20px;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="container profile-container">
+    <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="profile-sidebar shadow">
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-item-link active"><i class="fas fa-user"></i> Hồ sơ cá nhân</a></li>
+                    <li><a href="#" class="nav-item-link"><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a></li>
+                    <li><a href="#" class="nav-item-link"><i class="fas fa-heart"></i> Yêu thích</a></li>
+                    <li><a href="#" class="nav-item-link"><i class="fas fa-key"></i> Đổi mật khẩu</a></li>
+                    <hr style="border-color: #333;">
+                    <li><a href="/" class="nav-item-link"><i class="fas fa-arrow-left"></i> Quay lại mua hàng</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="content-card shadow">
+                <div class="card-header-custom">
+                    <div class="avatar-circle-lg">{{ user.username|first|upper }}</div>
+                    <div>
+                        <h3 class="mb-1">Chào mừng, {{ user.username }}!</h3>
+                        <p class="mb-0 text-muted" style="font-size: 0.9rem;">Thành viên từ: {{ user.date_joined|date:"d/m/Y" }}</p>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="custom-label">Tên người dùng</label>
+                                <input type="text" class="custom-input" value="{{ user.username }}" disabled>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="custom-label">Địa chỉ Email</label>
+                                <input type="email" name="email" class="custom-input" value="{{ user.email }}" placeholder="Chưa cập nhật email">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="custom-label">Họ và tên</label>
+                                <input type="text" name="name" class="custom-input" value="{{ user.first_name }} {{ user.last_name }}" placeholder="Nhập họ và tên">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="custom-label">Số điện thoại</label>
+                                <input type="text" name="phone" class="custom-input" placeholder="Nhập số điện thoại của bạn">
+                            </div>
+                        </div>
+
+                        <div class="info-box">
+                            <i class="fas fa-info-circle me-2"></i> Đây là trang quản lý cá nhân. Bạn có thể cập nhật thông tin để nhận các ưu đãi tốt nhất từ <b>COFFEE HOUSE</b>.
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn-update">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}

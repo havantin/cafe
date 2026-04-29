@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Nhận diện sản phẩm</title>
+
+    <style>
+        body{
+            font-family: Arial;
+            background: #f5f6fa;
+            margin:0;
+        }
+
+        .container{
+            width:500px;
+            margin:80px auto;
+            background:white;
+            padding:40px;
+            border-radius:10px;
+            box-shadow:0 5px 15px rgba(0,0,0,0.1);
+            text-align:center;
+        }
+
+        h1{
+            color:#333;
+        }
+
+        .upload-box{
+            border:2px dashed #ccc;
+            padding:30px;
+            border-radius:10px;
+            margin-top:20px;
+        }
+
+        input[type=file]{
+            margin-top:10px;
+        }
+
+        button{
+            margin-top:20px;
+            padding:10px 20px;
+            background:#4CAF50;
+            border:none;
+            color:white;
+            border-radius:5px;
+            font-size:16px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#45a049;
+        }
+
+        .result{
+            margin-top:30px;
+            font-size:20px;
+            color:#333;
+        }
+
+        img{
+            margin-top:20px;
+            max-width:250px;
+            border-radius:10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🤖 AI nhận diện sản phẩm</h1>
+
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+
+<div class="upload-box">
+
+<p>Chọn ảnh sản phẩm</p>
+
+<input type="file" name="image">
+
+</div>
+
+<button type="submit">🔍 Nhận diện</button>
+
+</form>
+
+
+{% if result %}
+
+<div class="result">
+
+<p>Kết quả: <b>{{ result }}</b></p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load currency_filters %} 
+
+{% block title %}Hệ Thống Quản Trị - Coffee House{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4" style="background: #000; min-height: 100vh;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-warning fw-bold"><i class="bi bi-speedometer2"></i> QUẢN TRỊ</h2>
+            <span class="text-secondary">Ngày cập nhật: {% now "d/m/Y H:i" %}</span>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card bg-dark border-warning text-light shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="text-secondary small mb-1">TỔNG KHÁCH HÀNG</p>
+                                <h3 class="fw-bold">{{ total_users }}</h3>
+                            </div>
+                            <i class="bi bi-people text-warning fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             
+            <div class="col-md-3">
+                <div class="card bg-dark border-info text-light shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="text-secondary small mb-1">SẢN PHẨM MENU</p>
+                                <h3 class="fw-bold">{{ total_products }}</h3>
+                            </div>
+                            <i class="bi bi-cup-hot text-info fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-dark border-success text-light shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="text-secondary small mb-1">TỔNG DOANH THU</p>
+                                <h3 class="fw-bold text-success">{{ total_revenue|vn_currency }} VNĐ</h3>
+                            </div>
+                            <i class="bi bi-currency-dollar text-success fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-dark border-danger text-light shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p class="text-secondary small mb-1">ĐƠN HÀNG MỚI</p>
+                                <h3 class="fw-bold text-danger">{{ all_orders.count }}</h3>
+                            </div>
+                            <i class="bi bi-bag-check text-danger fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-dark border-info text-light shadow-sm mb-5">
+            <div class="card-header bg-info text-dark fw-bold"><i class="bi bi-cart-check"></i> LỊCH SỬ MUA HÀNG CHI TIẾT</div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0 align-middle">
+                        <thead>
+                            <tr class="text-secondary small">
+                                <th>MÃ ĐƠN</th>
+                                <th>KHÁCH HÀNG</th>
+                                <th>DANH SÁCH MÓN MUA</th>
+                                <th>TỔNG TIỀN</th>
+                                <th>THỜI GIAN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in all_orders %}
+                            <tr>
+                                <td><span class="badge bg-secondary">#{{ order.id }}</span></td>
+                                <td class="text-warning fw-bold">{{ order.user.username }}</td>
+                                <td>
+                                    <ul class="list-unstyled mb-0 small">
+                                        {% for item in order.items.all %}
+                                            <li class="mb-1 text-light">
+                                                <i class="bi bi-caret-right-fill text-info"></i> 
+                                                {{ item.product.name }} <span class="text-secondary">(x{{ item.quantity }})</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td class="text-success fw-bold">{{ order.total_price|vn_currency }} VNĐ</td>
+                                <td class="small">{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="text-center py-4 text-secondary">Chưa có giao dịch nào được ghi nhận.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

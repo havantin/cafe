@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+{% load static %}  {% load humanize %}
+{% load currency_filters %}
+
+{% block content %}
+<style>
+    /* Container cố định góc phải */
+    .user-profile-fixed {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Nút tròn Avatar - Đã làm nhỏ lại (35px) */
+    .user-avatar-circle {
+        width: 35px;
+        height: 35px;
+        background: #ff7b00;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        border: 1.5px solid #fff;
+        transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .user-avatar-circle:hover {
+        transform: scale(1.15);
+        background: #e67e00;
+        color: white;
+    }
+
+    /* Badge Admin - Làm nhỏ gọn lại */
+    .admin-badge-fixed {
+        background: #dc3545;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 15px;
+        font-size: 10px;
+        font-weight: bold;
+        text-decoration: none;
+        letter-spacing: 0.5px;
+    }
+</style>
+
+<div class="user-profile-fixed">
+    {% if user.is_authenticated %}
+        {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'admin_panel' %}" class="admin-badge-fixed">ADMIN</a>
+        {% endif %}
+        
+        <a href="{% url 'dashboard' %}" class="user-avatar-circle">
+            {{ user.username|first|upper }}
+        </a>
+    {% endif %}
+</div>
+
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7" style="position: relative; z-index: 10;">
+                <h1 class="hero-title">Hương Vị<br><span>Đích Thực</span></h1>
+                <p class="hero-text mt-3">Thưởng thức cà phê nguyên bản cùng những chiếc bánh ngọt tuyệt hảo được làm mới mỗi ngày.</p>
+                
+                <div class="mt-4 d-flex gap-3">
+                    <a href="#menu" class="btn btn-main">Khám phá ngay</a>
+                    
+                    {% if not user.is_authenticated %}
+                        <a href="{% url 'register' %}" class="btn btn-outline-light rounded-pill px-4">
+                            Trở thành hội viên
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <img src="https://cafecc.vn/files/images/thumb/637431328675757632--tin-viet.png" 
+         alt="Floating Coffee" class="floating-coffee">
+</section>
+
+<section id="about" class="about-section py-5">
+    <div class="about-decor-left"></div>
+    <div class="about-decor-right"></div>
+    
+    <div class="container position-relative">
+        <div class="text-center mb-5">
+            <h2 class="about-title">Về chúng tôi</h2>
+            <p class="about-subtitle">Chúng tôi mong muốn cafe Việt Nam sẽ đến được với các bạn bè trên thế giới.</p>
+        </div>
+
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="about-sketch-wrapper">
+                    <img src="https://images.baoangiang.com.vn/image/fckeditor/upload/2023/20230225/images/cb90fdc4f4891dd74498.jpg" 
+                         alt="C&C Sketch" class="img-fluid about-sketch">
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="about-text-content ps-lg-5">
+                    <p>Được thành lập từ năm 2026, công ty <strong>3 người</strong> là một trong những doanh nghiệp cung cấp sản phẩm cafe năng động tại thị trường Việt Nam. Với sự thấu hiểu về thị hiếu và xu hướng của người tiêu dùng về các loại thức uống tiện lợi mà vẫn giữ được hương vị nồng nàn của cafe, béo ngậy của kem sữa...</p>
+                    <p><strong>chúng tôi</strong> liên tục cải tiến và cho ra mắt nhiều dòng sản phẩm cafe hòa tan 3 trong 1 với hương vị thơm ngon và độc đáo. Trong đó, tiêu chí chất lượng cafe thật, bột kem không sữa và 0% cholesterol luôn được chú trọng giữ gìn...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="service-section py-5" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://cafecc.vn/assets/img/bg/2.png'); background-size: cover; background-position: center; background-attachment: fixed;">
+    <div class="container">
+        <div class="text-center text-white mb-5">
+            <h2 class="about-title text-white">Dịch vụ</h2>
+            <p class="about-subtitle text-white">Cung cấp dịch vụ gia công đóng gói cho tất cả các mặt hàng cà phê với<br>giá thành tốt nhất với công suất 3 tấn/ ngày.</p>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-5">
+                <img src="https://cafecc.vn/assets/img/other/1.png" alt="Dịch vụ" class="img-fluid rounded shadow-lg">
+            </div>
+            <div class="col-lg-7 text-white ps-lg-5 mt-4 mt-lg-0">
+                <p style="font-family: 'Poppins', sans-serif; line-height: 1.8; opacity: 0.9;">Nội dung giới thiệu sơ bộ về dịch vụ gia công đóng gói chuyên nghiệp, đảm bảo quy chuẩn vệ sinh an toàn thực phẩm và giữ trọn hương vị nguyên bản của hạt cà phê.</p>
+                <a href="#" style="color: #ff7b00; text-decoration: none; font-weight: 600;">Xem thêm →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="menu" class="py-5">
+    <div class="container text-center mb-5">
+        <h2 class="fw-bold display-5">Menu Cà Phê</h2>
+        <div style="width: 60px; height: 4px; background: #ff7b00; margin: 10px auto;"></div>
+    </div>
+    <div class="container">
+        <div class="row">   
+            {% for p in products %}
+            <div class="col-md-3 mb-4">
+                <div class="product-card h-100">
+                    {% if p.image %}<img src="{{ p.image.url }}" class="product-img w-100">{% endif %}
+                    <div class="p-4 text-center">
+                        <span class="badge bg-warning text-dark mb-2">{{ p.category.name }}</span>
+                        <h5 class="fw-bold">{{ p.name }}</h5>
+                        <p class="text-warning fw-bold">{{ p.price|vn_currency }} VNĐ</p>
+                        <form action="{% url 'add_to_cart' p.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1">
+                            <button class="btn btn-outline-dark btn-sm w-100 rounded-pill">+ Thêm vào giỏ</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<div class="chat-toggle" onclick="toggleChat()">💬</div>
+<div id="ai-chatbox" class="chatbox">
+    <div class="chat-header">
+        <span>☕ Bot Chat BY HATIN</span>
+        <span onclick="toggleChat()" style="cursor:pointer">✖</span>
+    </div>
+    <div id="chat-box" class="chat-body" style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="ai-msg">
+            <span>Chào bạn! Bạn cần tư vấn món gì hôm nay? ☕</span>
+        </div>
+    </div>
+    <div class="chat-input-container">
+        <div id="preview-container" style="display: none; padding: 5px; background: #eee; text-align: center;">
+            <small id="file-name" style="font-size: 10px; color: #666;"></small>
+            <span onclick="clearFile()" style="cursor:pointer; color:red; margin-left:10px">×</span>
+        </div>
+        <div class="chat-input">
+            <input type="file" id="image-input" accept="image/*" style="display:none" onchange="handleFileSelect()">
+            <label for="image-input" style="cursor:pointer; padding: 10px; font-size: 20px;">📷</label>
+            <input id="user-input" type="text" placeholder="Hỏi hoặc gửi ảnh hạt cafe...">
+            <button onclick="sendMessage()">Gửi</button>
+        </div>
+    </div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Poppins:wght@300;400;600;800&display=swap');
+
+/* --- CẤU TRÚC HERO & CHUNG --- */
+.hero-section { height: 100vh; position: relative; padding-top: 100px; background: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.7)), url("https://cafecc.vn/files/images/thumb/637431328499407596--tin-viet.png"); background-size: cover; background-position: center; display: flex; align-items: center; overflow: hidden;}
+.hero-title{ font-size:70px; font-weight:800; line-height:1.1; color: white; font-family: 'Poppins';}
+.hero-title span{ color:#ff7b00; }
+.hero-text{ max-width:500px; font-size:18px; opacity:0.9; color: white; }
+.btn-main{ background:#ff7b00; border:none; padding:14px 32px; border-radius:30px; color:white; font-weight:600; transition:0.3s; text-decoration: none; }
+
+.about-section { background: #ffffff; position: relative; overflow: hidden; color: #333; }
+.about-title { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 700; }
+.about-subtitle { font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 600; max-width: 600px; margin: 0 auto; }
+.about-text-content p { font-family: 'Poppins', sans-serif; line-height: 1.8; color: #555; margin-bottom: 20px; }
+.about-sketch { filter: grayscale(100%); opacity: 0.9; transition: 0.5s; }
+.about-sketch:hover { filter: grayscale(0%); opacity: 1; }
+.about-decor-left, .about-decor-right { position: absolute; width: 250px; height: 100%; opacity: 0.1; z-index: 0; background-size: contain; background-repeat: no-repeat; }
+.about-decor-left { left: -50px; top: 0; background-image: url("https://cafecc.vn/assets/img/about/3.png"); }
+.about-decor-right { right: -50px; top: 0; background-image: url("https://cafecc.vn/assets/img/about/1.png"); }
+
+.product-card{ background:white; border-radius:20px; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.05); transition:0.3s; }
+.product-card:hover{ transform:translateY(-10px); }
+.product-img{ height:220px; object-fit:cover; }
+
+.floating-coffee { position: absolute; right: 5%; bottom: 10%; width: 480px; z-index: 2; animation: coffeeFloat 5s ease-in-out infinite; filter: drop-shadow(0 30px 50px rgba(0,0,0,0.8)); pointer-events: none;}
+@keyframes coffeeFloat { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-30px) rotate(3deg); } }
+
+/* --- PHẦN CHATBOT STYLE --- */
+.chat-toggle{ position:fixed; bottom:20px; right:20px; width:60px; height:60px; background:#ff7b00; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; color:white; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.25); z-index:999; transition: 0.3s; }
+.chat-toggle:hover { transform: scale(1.1); }
+.chatbox{ position:fixed; bottom:90px; right:20px; width:330px; background:white; border-radius:15px; box-shadow:0 15px 40px rgba(0,0,0,0.2); display:none; overflow:hidden; z-index:999; border: 1px solid #eee; }
+.chat-header{ background:#ff7b00; color:white; padding:12px 15px; display:flex; justify-content:space-between; align-items: center; font-weight:600; }
+.chat-body{ height:380px; overflow-y:auto; padding:15px; background:#f9f9f9; display: flex; flex-direction: column; gap: 10px; }
+.user-msg{ align-self: flex-end; text-align:right; }
+.user-msg span{ background:#ff7b00; color:white; padding:10px 14px; border-radius:18px 18px 0 18px; display:inline-block; max-width:90%; font-size:14px; box-shadow: 0 2px 5px rgba(255,123,0,0.2); }
+.ai-msg{ align-self: flex-start; text-align:left; }
+.ai-msg span{ background:white; color:#333; padding:10px 14px; border-radius:18px 18px 18px 0; display:inline-block; max-width:90%; box-shadow:0 2px 8px rgba(0,0,0,0.06); font-size:14px; line-height: 1.5; }
+.chat-input-container { background: white; }
+.chat-input { display: flex; align-items: center; padding: 10px; border-top: 1px solid #eee; gap: 5px; }
+.chat-input input[type="text"] { flex: 1; border: 1px solid #ddd; padding: 10px 15px; border-radius: 25px; outline: none; font-size: 14px; transition: 0.3s; }
+.chat-input input[type="text"]:focus { border-color: #ff7b00; }
+.chat-input button { background: #ff7b00; border: none; color: white; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+.chat-input button:hover { background: #e67e00; }
+
+@media (max-width: 992px) { .floating-coffee { width: 200px; } .hero-title { font-size: 40px; } .about-decor-left, .about-decor-right { display: none; } .chatbox { width: 300px; right: 10px; } }
+</style>
+
+<script>
+// 1. Hàm nhận diện và biến đổi text AI thành Card sản phẩm
+function formatAIReply(text) {
+    const productRegex = /\[PRODUCT: (.*?) \| (.*?) \| (.*?)\]/g;
+    return text.replace(productRegex, function(match, name, price, imgUrl) {
+        return `
+            <div class="product-card-chat" style="background:#fff; border:1px solid #ddd; border-radius:10px; margin:10px 0; overflow:hidden; box-shadow:0 4px 8px rgba(0,0,0,0.1); width:100%;">
+                <img src="${imgUrl.trim()}" style="width:100%; height:120px; object-fit:cover;">
+                <div style="padding:8px; text-align:center;">
+                    <b style="font-size:14px; display:block; color:#333;">${name.trim()}</b>
+                    <span style="color:#ff7b00; font-weight:bold; font-size:13px;">${price.trim()}</span>
+                    <button onclick="window.location.href='#menu'" style="width:100%; background:#ff7b00; color:#fff; border:none; padding:5px; margin-top:5px; border-radius:5px; font-size:12px; cursor:pointer;">Xem chi tiết</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function toggleChat(){
+    let box = document.getElementById("ai-chatbox");
+    box.style.display = (box.style.display === "block") ? "none" : "block";
+    if(box.style.display === "block") {
+        scrollToBottom();
+        document.getElementById("user-input").focus();
+    }
+}
+
+function handleFileSelect() {
+    let file = document.getElementById("image-input").files[0];
+    let preview = document.getElementById("preview-container");
+    let fileName = document.getElementById("file-name");
+    if (file) { 
+        preview.style.display = "block"; 
+        fileName.innerText = "📁 " + (file.name.length > 20 ? file.name.substring(0,17) + "..." : file.name); 
+    }
+}
+
+function clearFile() {
+    document.getElementById("image-input").value = "";
+    document.getElementById("preview-container").style.display = "none";
+}
+
+function scrollToBottom() {
+    const chatBox = document.getElementById("chat-box");
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function sendMessage() {
+    const input = document.getElementById("user-input");
+    const imageInput = document.getElementById("image-input");
+    const chatBox = document.getElementById("chat-box");
+    const msg = input.value.trim();
+    const file = imageInput.files[0];
+    
+    if (!msg && !file) return;
+
+    // Hiển thị tin nhắn người dùng
+    let userDisplay = msg;
+    if (file) {
+        userDisplay += (msg ? "<br>" : "") + `<small style="font-style:italic; opacity:0.8;">🖼️ Đã gửi 1 ảnh</small>`;
+    }
+    chatBox.innerHTML += `<div class="user-msg"><span>${userDisplay}</span></div>`;
+    scrollToBottom();
+
+    // Hiển thị trạng thái chờ
+    const typingId = "typing-" + Date.now();
+    chatBox.innerHTML += `<div class="ai-msg" id="${typingId}"><span>☕ Đang xử lý...</span></div>`;
+    scrollToBottom();
+
+    const formData = new FormData();
+    formData.append("message", msg);
+    if (file) formData.append("image", file);
+
+    // Reset input
+    input.value = "";
+    clearFile();
+
+    fetch("/ai-chat/", {
+        method: "POST",
+        headers: { "X-CSRFToken": "{{ csrf_token }}" },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        const typingNode = document.getElementById(typingId);
+        if (typingNode) typingNode.remove();
+        
+        // CẢI TIẾN: Format trước khi hiển thị
+        const formattedReply = formatAIReply(data.reply);
+        chatBox.innerHTML += `<div class="ai-msg"><span>${formattedReply}</span></div>`;
+        scrollToBottom();
+    })
+    .catch(err => {
+        const typingNode = document.getElementById(typingId);
+        if (typingNode) {
+            typingNode.innerHTML = "<span>Xin lỗi, sếp! Có lỗi kết nối rồi ☕</span>";
+        }
+    });
+}
+
+document.getElementById("user-input").addEventListener("keypress", function(e){
+    if(e.key === "Enter") sendMessage();
+});
+</script>
+{% endblock %}

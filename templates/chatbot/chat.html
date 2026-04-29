@@ -1,0 +1,37 @@
+<style>
+    #chat-circle { position: fixed; bottom: 20px; right: 20px; background: #6F4E37; width: 60px; height: 60px; border-radius: 50%; color: white; text-align: center; line-height: 60px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+    #chat-box { position: fixed; bottom: 90px; right: 20px; width: 300px; height: 400px; background: white; border: 1px solid #ddd; display: none; flex-direction: column; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+    #chat-header { background: #6F4E37; color: white; padding: 10px; font-weight: bold; }
+    #chat-messages { flex: 1; padding: 10px; overflow-y: auto; font-size: 14px; }
+    #chat-input-area { display: flex; border-top: 1px solid #eee; }
+    #chat-input { flex: 1; border: none; padding: 10px; outline: none; }
+    #chat-send { background: #6F4E37; color: white; border: none; padding: 10px; cursor: pointer; }
+</style>
+
+<div id="chat-circle">☕</div>
+<div id="chat-box">
+    <div id="chat-header">Hỗ trợ Coffee Shop</div>
+    <div id="chat-messages"></div>
+    <div id="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Hỏi về cafe...">
+        <button id="chat-send">Gửi</button>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $('#chat-circle').click(function() { $('#chat-box').toggle(); });
+
+    $('#chat-send').click(function() {
+        let msg = $('#chat-input').val();
+        if(!msg) return;
+
+        $('#chat-messages').append('<div><b>Bạn:</b> ' + msg + '</div>');
+        $('#chat-input').val('');
+
+        $.post('/chatbot/', {message: msg}, function(data) {
+            $('#chat-messages').append('<div style="color: #6F4E37;"><b>Bot:</b> ' + data.reply + '</div>');
+            $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+        });
+    });
+</script>

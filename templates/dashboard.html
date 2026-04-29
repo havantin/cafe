@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Bảng điều khiển{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="list-group shadow-sm">
+            <a href="#" class="list-group-item list-group-item-action active" style="background-color: #6f4e37; border-color: #6f4e37;">
+                Thông tin tài khoản
+            </a>
+            <a href="/" class="list-group-item list-group-item-action">Quay lại mua hàng</a>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3>Chào mừng, {{ user.username }}!</h3>
+                <hr>
+                <p><strong>Email:</strong> {{ user.email|default:"Chưa cập nhật" }}</p>
+                <p><strong>Ngày tham gia:</strong> {{ user.date_joined|date:"d/m/Y" }}</p>
+                <div class="alert alert-info">
+                    Đây là trang quản lý cá nhân của bạn. Bạn có thể xem lịch sử đơn hàng tại đây (Tính năng đang phát triển).
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
